@@ -1,28 +1,99 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <ListData /> -->
+    <transition
+      name="fade"
+      mode="out-in">
+      <Start
+        v-if="!getData"
+        class="app__start" />
+      <div
+        v-else
+        class="app__tree">
+        <Tree
+          v-for="element in getData"
+          :key="element.id"
+          :element="element" />
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import Start from './components/Start.vue';
+import Tree from './components/Tree.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    Start,
+    Tree,
+  },
+  methods: {
+    deleteElement(array) {
+      if (array.length === 1) {
+        return array;
+      }
+      const start = this.$store.state.startDragElement;
+      const filtered = array.filter((element) => element.id !== start.id);
+      return filtered.map((element) => {
+        if (!element.children) {
+          return element;
+        }
+        return { ...element, children: this.deleteElement(element.children) };
+      });
+    },
+    editData() {
+      const data = this.$store.getters.getData;
+      const newData = this.deleteElement(data);
+      this.$store.commit('setData', newData);
+    },
+  },
+  computed: {
+    getData() {
+      return this.$store.getters.getData;
+    },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 100%;
+  height: 100vh;
+  background: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__tree {
+  min-width: 320px;
+  width: 40vw;
+  animation-duration: 1s;
+  animation-name: slideDown;
+  border: 1px solid black;
+  position: fixed;
+  top: 30%;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
 }
 </style>
