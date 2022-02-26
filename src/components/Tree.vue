@@ -31,7 +31,7 @@
       v-if="showChildren && element.children">
       <Tree
         v-for="children in element.children"
-        :key="children.id"
+        :key="children.created_at"
         :element="children"
         :padding-for-child="paddingForChild + 30"
         @changeData="changeData" />
@@ -80,9 +80,13 @@ export default {
       this.$store.commit('dragModule/setEndDragElement', element);
       this.$emit('changeData');
     },
+    changeData() {
+      this.$emit('changeData');
+    },
   },
   computed: {
     isParent() {
+      console.log(this.element.children);
       return this.element.children;
     },
   },

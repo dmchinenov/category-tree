@@ -12,7 +12,7 @@
         class="app__tree">
         <Tree
           v-for="element in getData"
-          :key="element.id"
+          :key="element.created_at"
           :element="element"
           @changeData="changeData" />
       </div>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Start from './components/Start.vue';
 import Tree from './components/Tree.vue';
 
@@ -44,13 +45,30 @@ export default {
         return { ...element, children: this.deleteElement(element.children) };
       });
     },
+    addElement(data) {
+      const startElement = this.$store.getters['dragModule/getStartDragElement'];
+      const endElement = this.$store.getters['dragModule/getEndDragElement'];
+
+      data.forEach((element) => {
+        const currentParent = element.id === endElement.id;
+        if (currentParent) {
+          if (element.children) {
+            element.children.push(startElement);
+          } else {
+            Vue.set(element, 'children', []);
+            element.children.push(startElement);
+          }
+        }
+        console.log(currentParent, element);
+      });
+    },
     changeData() {
       console.log('edit data in app');
       const newData = this.deleteElement(this.getData);
       this.$store.commit('setData', newData);
-      // cosnt newData = this.deleteElement()
-      // const data = this.$store.getters.getData;
-      // const newData = this.deleteElement(data);
+      console.log(newData);
+      this.addElement(newData);
+      this.$store.commit('setData', newData);
     },
   },
   computed: {
