@@ -33,7 +33,8 @@
         v-for="children in element.children"
         :key="children.id"
         :element="children"
-        :padding-for-child="paddingForChild + 30" />
+        :padding-for-child="paddingForChild + 30"
+        @changeData="changeData" />
     </div>
   </div>
 </template>
@@ -62,11 +63,10 @@ export default {
     },
     startDrag(element) {
       this.dragStart = true;
-      this.$store.commit('setStartDragElement', element);
+      this.$store.commit('dragModule/setStartDragElement', element);
     },
     endDrag() {
       this.dragStart = false;
-      this.dragElements = [];
     },
     overDrag() {
       this.dragOver = true;
@@ -74,10 +74,11 @@ export default {
     leaveDrag() {
       this.dragOver = false;
     },
-    dropDrag() {
+    dropDrag(element) {
       this.dragEnter = false;
-      this.editData();
       this.dragOver = false;
+      this.$store.commit('dragModule/setEndDragElement', element);
+      this.$emit('changeData');
     },
   },
   computed: {

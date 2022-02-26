@@ -2,15 +2,18 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import data from '../assets/data.json';
 // import axios from 'axios';
+import dragModule from './dragModule';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  namespaced: true,
+  modules: {
+    dragModule,
+  },
   state: {
     appLoading: false,
     data: null,
-    startDragElement: null,
-    endDragElement: null,
   },
   getters: {
     getLoadingStatus: (state) => state.appLoading,
@@ -19,12 +22,6 @@ export default new Vuex.Store({
   mutations: {
     setLoading: (state, value) => { state.appLoading = value; },
     setData: (state, value) => { state.data = value; },
-    setStartDragElement: (state, value) => { state.startDragElement = value; },
-    setEndDragElement: (state, value) => { state.endDragElement = value; },
-    resetDragElements: (state) => {
-      state.startDragElement = null;
-      state.endDragElement = null;
-    },
   },
   actions: {
     loadTreeData({ commit }) {

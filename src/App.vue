@@ -13,7 +13,8 @@
         <Tree
           v-for="element in getData"
           :key="element.id"
-          :element="element" />
+          :element="element"
+          @changeData="changeData" />
       </div>
     </transition>
   </div>
@@ -31,11 +32,11 @@ export default {
   },
   methods: {
     deleteElement(array) {
+      const startElement = this.$store.getters['dragModule/getStartDragElement'];
       if (array.length === 1) {
         return array;
       }
-      const start = this.$store.state.startDragElement;
-      const filtered = array.filter((element) => element.id !== start.id);
+      const filtered = array.filter((element) => element.id !== startElement.id);
       return filtered.map((element) => {
         if (!element.children) {
           return element;
@@ -43,10 +44,13 @@ export default {
         return { ...element, children: this.deleteElement(element.children) };
       });
     },
-    editData() {
-      const data = this.$store.getters.getData;
-      const newData = this.deleteElement(data);
+    changeData() {
+      console.log('edit data in app');
+      const newData = this.deleteElement(this.getData);
       this.$store.commit('setData', newData);
+      // cosnt newData = this.deleteElement()
+      // const data = this.$store.getters.getData;
+      // const newData = this.deleteElement(data);
     },
   },
   computed: {
