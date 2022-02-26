@@ -12,7 +12,7 @@
         class="app__tree">
         <Tree
           v-for="element in getData"
-          :key="element.created_at"
+          :key="element.id"
           :element="element"
           @changeData="changeData" />
       </div>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+// import Vue from 'vue';
 import Start from './components/Start.vue';
 import Tree from './components/Tree.vue';
 
@@ -34,9 +34,6 @@ export default {
   methods: {
     deleteElement(array) {
       const startElement = this.$store.getters['dragModule/getStartDragElement'];
-      if (array.length === 1) {
-        return array;
-      }
       const filtered = array.filter((element) => element.id !== startElement.id);
       return filtered.map((element) => {
         if (!element.children) {
@@ -45,29 +42,29 @@ export default {
         return { ...element, children: this.deleteElement(element.children) };
       });
     },
-    addElement(data) {
-      const startElement = this.$store.getters['dragModule/getStartDragElement'];
-      const endElement = this.$store.getters['dragModule/getEndDragElement'];
+    // addElement(data) {
+    //   const startElement = this.$store.getters['dragModule/getStartDragElement'];
+    //   const endElement = this.$store.getters['dragModule/getEndDragElement'];
 
-      data.forEach((element) => {
-        const currentParent = element.id === endElement.id;
-        if (currentParent) {
-          if (element.children) {
-            element.children.push(startElement);
-          } else {
-            Vue.set(element, 'children', []);
-            element.children.push(startElement);
-          }
-        }
-        console.log(currentParent, element);
-      });
-    },
+    //   data.forEach((element) => {
+    //     const currentParent = element.id === endElement.id;
+    //     if (currentParent) {
+    //       if (element.children) {
+    //         element.children.push(startElement);
+    //       } else {
+    //         Vue.set(element, 'children', []);
+    //         element.children.push(startElement);
+    //       }
+    //     }
+    //     console.log(currentParent, element);
+    //   });
+    // },
     changeData() {
       console.log('edit data in app');
       const newData = this.deleteElement(this.getData);
       this.$store.commit('setData', newData);
       console.log(newData);
-      this.addElement(newData);
+      // this.addElement(newData);
       this.$store.commit('setData', newData);
     },
   },

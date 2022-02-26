@@ -31,7 +31,7 @@
       v-if="showChildren && element.children">
       <Tree
         v-for="children in element.children"
-        :key="children.created_at"
+        :key="children.id"
         :element="children"
         :padding-for-child="paddingForChild + 30"
         @changeData="changeData" />
@@ -86,8 +86,7 @@ export default {
   },
   computed: {
     isParent() {
-      console.log(this.element.children);
-      return this.element.children;
+      return this.element.children && this.element.children.length > 0;
     },
   },
 };
