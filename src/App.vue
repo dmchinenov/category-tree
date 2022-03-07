@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <ListData /> -->
     <transition
       name="fade"
       mode="out-in">
@@ -21,7 +20,7 @@
 </template>
 
 <script>
-// import Vue from 'vue';
+import Vue from 'vue';
 import Start from './components/Start.vue';
 import Tree from './components/Tree.vue';
 
@@ -42,30 +41,34 @@ export default {
         return { ...element, children: this.deleteElement(element.children) };
       });
     },
-    // addElement(data) {
-    //   const startElement = this.$store.getters['dragModule/getStartDragElement'];
-    //   const endElement = this.$store.getters['dragModule/getEndDragElement'];
+    addElement(array) {
+      const endElement = this.$store.getters['dragModule/getEndDragElement'];
+      const startElement = this.$store.getters['dragModule/getStartDragElement'];
+      const filtered = array.filter((element) => element.id === endElement.id);
 
-    //   data.forEach((element) => {
-    //     const currentParent = element.id === endElement.id;
-    //     if (currentParent) {
-    //       if (element.children) {
-    //         element.children.push(startElement);
-    //       } else {
-    //         Vue.set(element, 'children', []);
-    //         element.children.push(startElement);
-    //       }
-    //     }
-    //     console.log(currentParent, element);
-    //   });
-    // },
+      if (filtered.length > 0) {
+        if (filtered[0].children) {
+          filtered[0].children.push(startElement);
+          console.log('1');
+          console.log(filtered[0]);
+        } else {
+          console.log('2');
+          Vue.set(filtered[0], 'children', []);
+          filtered[0].children.push(startElement);
+          console.log(filtered[0]);
+        }
+      }
+      return array;
+      // return filtered.map((element) => {
+      //   if (!element.children) {
+      //     return element;
+      //   }
+      //   return { ...element, children: this.deleteElement(element.children) };
+      // });
+    },
     changeData() {
-      console.log('edit data in app');
       const newData = this.deleteElement(this.getData);
-      this.$store.commit('setData', newData);
-      console.log(newData);
-      // this.addElement(newData);
-      this.$store.commit('setData', newData);
+      this.$store.commit('setData', this.addElement(newData));
     },
   },
   computed: {
