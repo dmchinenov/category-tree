@@ -38,15 +38,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .start {
-    text-align: center;
-  }
+.start {
+  text-align: center;
+}
 
-  .start__load-button {
-    width: 200px;
-  }
+.start__load-button {
+  width: 200px;
+}
 
-  .start__spinner {
-    margin-right: 10px;
-  }
+.start__spinner {
+  margin-right: 10px;
+}
 </style>
