@@ -33,6 +33,10 @@ export default {
   methods: {
     deleteElement(array) {
       const startElement = this.$store.getters['dragModule/getStartDragElement'];
+      const endElement = this.$store.getters['dragModule/getEndDragElement'];
+      if (startElement.id === endElement.id) {
+        return array;
+      }
       const filtered = array.filter((element) => element.id !== startElement.id);
       return filtered.map((element) => {
         if (!element.children) {
@@ -63,8 +67,14 @@ export default {
       });
     },
     changeData() {
+      const endElement = this.$store.getters['dragModule/getEndDragElement'];
+      const startElement = this.$store.getters['dragModule/getStartDragElement'];
+      if (startElement.id === endElement.id) {
+        return;
+      }
       const newData = this.deleteElement(this.getData);
       this.$store.commit('setData', this.addElement(newData));
+      this.$store.dispatch('updateTreeData');
     },
   },
   computed: {
