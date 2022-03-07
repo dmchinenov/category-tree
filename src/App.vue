@@ -44,27 +44,23 @@ export default {
     addElement(array) {
       const endElement = this.$store.getters['dragModule/getEndDragElement'];
       const startElement = this.$store.getters['dragModule/getStartDragElement'];
-      const filtered = array.filter((element) => element.id === endElement.id);
 
-      if (filtered.length > 0) {
-        if (filtered[0].children) {
-          filtered[0].children.push(startElement);
-          console.log('1');
-          console.log(filtered[0]);
-        } else {
-          console.log('2');
-          Vue.set(filtered[0], 'children', []);
-          filtered[0].children.push(startElement);
-          console.log(filtered[0]);
+      return array.map((element) => {
+        const currentElement = element.id === endElement.id;
+        if (currentElement) {
+          if (element.children) {
+            element.children.push(startElement);
+          } else {
+            Vue.set(element, 'children', []);
+            element.children.push(startElement);
+          }
+          return element;
         }
-      }
-      return array;
-      // return filtered.map((element) => {
-      //   if (!element.children) {
-      //     return element;
-      //   }
-      //   return { ...element, children: this.deleteElement(element.children) };
-      // });
+        if (!element.children) {
+          return element;
+        }
+        return { ...element, children: this.addElement(element.children) };
+      });
     },
     changeData() {
       const newData = this.deleteElement(this.getData);
