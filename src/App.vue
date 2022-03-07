@@ -8,12 +8,25 @@
         class="app__start" />
       <div
         v-else
-        class="app__tree">
-        <Tree
-          v-for="element in getData"
-          :key="element.id"
-          :element="element"
-          @changeData="changeData" />
+        class="app__tree-container">
+        <div
+          class="app__tree">
+          <Tree
+            v-for="element in getData"
+            :key="element.id"
+            :element="element"
+            @changeData="changeData" />
+        </div>
+        <b-list-group
+          v-if="getSelectedElement"
+          class="app__info">
+          <b-list-group-item
+            v-for="item, index in Object.entries(getSelectedElement)"
+            :key="index"
+            class="app__info-element">
+            <span>{{ `${item[0]} : ${item[1]}` }}</span>
+          </b-list-group-item>
+        </b-list-group>
       </div>
     </transition>
   </div>
@@ -81,6 +94,9 @@ export default {
     getData() {
       return this.$store.getters.getData;
     },
+    getSelectedElement() {
+      return this.$store.getters.getSelectedElement;
+    },
   },
 };
 </script>
@@ -96,16 +112,38 @@ export default {
   justify-content: center;
 }
 
-.app__tree {
+.app__tree-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: fixed;
+  align-items: center;
+  top: 10%;
   min-width: 320px;
   width: 40vw;
+}
+
+.app__tree {
   animation-duration: 1s;
+  width: 100%;
   animation-name: slideDown;
   border: 1px solid black;
-  position: fixed;
-  top: 30%;
-  max-height: 500px;
+  max-height: 420px;
+  box-sizing: content-box;
   overflow-y: auto;
+}
+
+.app__info {
+  border: 1px solid black;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+}
+
+.app__info-element {
+  background: transparent;
+  font-size: 14px;
 }
 
 .fade-enter-active, .fade-leave-active {

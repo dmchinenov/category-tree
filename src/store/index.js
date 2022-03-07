@@ -13,14 +13,19 @@ export default new Vuex.Store({
   state: {
     appLoading: false,
     data: null,
+    selectedElement: null,
   },
   getters: {
     getLoadingStatus: (state) => state.appLoading,
     getData: (state) => state.data,
+    getSelectedElement: (state) => state.selectedElement,
   },
   mutations: {
     setLoading: (state, value) => { state.appLoading = value; },
     setData: (state, value) => { state.data = value; },
+    setSelectedElement: (state, value) => {
+      state.selectedElement = state.selectedElement === value ? null : value;
+    },
   },
   actions: {
     loadTreeData({ commit }) {

@@ -60,6 +60,7 @@ export default {
   methods: {
     selectElement() {
       this.showChildren = !this.showChildren;
+      this.$store.commit('setSelectedElement', this.element);
     },
     startDrag(element) {
       this.dragStart = true;
