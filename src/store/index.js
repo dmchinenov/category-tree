@@ -31,8 +31,13 @@ export default new Vuex.Store({
       // })
       //   .then(({ data: { categories} }) => {
       //     commit('setData', categories);
+      //     commit('setLoading', false);
       //     return Promise.resolve(categories);
-      // });
+      // })
+      //   .catch((error) => {
+      //     commit('setLoading', false);
+      //     return Promise.reject(error);
+      //   });
 
       setTimeout(() => {
         commit('setData', data.data);
@@ -41,7 +46,7 @@ export default new Vuex.Store({
     },
     updateTreeData() {
       // commit('setLoading', true);
-      // return axios.post(`blabla/ap....`, getters.getData)
+      // return axios.post(`blabla/apiv3/categories/${token}`, getters.getData)
       //   .then(({ data: { categories } }) => {
       //     return Promise.resolve();
       //   })
